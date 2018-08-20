@@ -1,0 +1,12 @@
+{
+    "Title": "Skaioskit Voter Service",
+    "Steps": [
+        {
+            "Type": "PrintMessage",
+            "Args": {
+                "message": "message from child deployment"
+            }
+        }
+    ]
+}
+
