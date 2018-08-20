@@ -4,7 +4,7 @@
         {
             "Type": "PrintMessage",
             "Args": {
-                "message": "message from child deployment"
+                "Message": "message from voter child deployment"
             }
         }
     ]
