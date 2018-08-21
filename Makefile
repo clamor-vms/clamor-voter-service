@@ -21,9 +21,9 @@ pack:
 
 upload:
 	docker push localhost:5000/skaioskit/voter-service
-	cat k8s/deployment.template.yaml | sed -e 's/{{BUILD_TIME}}/${DATETIME}/g' > deployment.yaml
 
 deploy:
+	cat k8s/deployment.template.yaml | sed -e 's/{{BUILD_TIME}}/${DATETIME}/g' > deployment.yaml
 	envsubst < deployment.yaml | kubectl apply -f -
 
 ensure:

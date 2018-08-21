@@ -1,12 +1,201 @@
 {
     "Title": "Skaioskit Voter Service",
-    "Steps": [
-        {
-            "Type": "PrintMessage",
-            "Args": {
-                "Message": "message from voter child deployment"
-            }
+    "Commands": {
+        "_build": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "run",
+                            "--rm",
+                            "-v",
+                            "${DIR}/src:/go/src/skaioskit",
+                            "-w",
+                            "/go/src/skaioskit",
+                            "lushdigital/docker-golang-dep",
+                            "ensure"
+                        ]
+                    }
+                },
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "run",
+                            "--rm",
+                            "-v",
+                            "${DIR}/src:/go/src/skaioskit",
+                            "-w",
+                            "/go/src/skaioskit",
+                            "golang:latest",
+                            "go",
+                            "build",
+                            "-ldflags",
+                            "-linkmode external -extldflags -static",
+                            "-o",
+                            "voter"
+                        ]
+                    }
+                }
+            ]
+        },
+        "_pack": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "build",
+                            "-f",
+                            "./Dockerfile",
+                            "-t",
+                            "localhost:5000/skaioskit/voter-service",
+                            "."
+                        ]
+                    }
+                }
+            ]
+        },
+        "_upload": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "push",
+                            "localhost:5000/skaioskit/voter-service"
+                        ]
+                    }
+                }
+            ]
+        },
+        "build": {
+            "Requires": ["_build", "_pack", "_upload"],
+            "Steps": []
+        },
+        "deploy": {
+            "Requires": ["build"],
+            "Steps": [
+            ]
+        },
+        "ensure": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "kubectl",
+                            "create",
+                            "job",
+                            "--from=cronjob/voter-service-ensure-cronjob",
+                            "voter-service-ensure-cronjob-job"
+                        ]
+                    }
+                }
+            ]
+        },
+        "export": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "run",
+                            "-it",
+                            "-v",
+                            "${DIR}/data:/data",
+                            "-v",
+                            "${DIR}/working:/working",
+                            "localhost:5000/skaioskit/voter-service",
+                            "/voter",
+                            "export"
+                        ]
+                    }
+                }
+            ]
+        },
+        "setup": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "run",
+                            "-d",
+                            "-p",
+                            "5000:5000",
+                            "--restart=always",
+                            "--name",
+                            "registry",
+                            "registry:2"
+                        ]
+                    }
+                }
+            ]
+        },
+        "init": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "docker",
+                            "run",
+                            "--rm",
+                            "-v",
+                            "${DIR}/src:/go/src/skaioskit",
+                            "-w",
+                            "/go/src/skaioskit",
+                            "lushdigital/docker-golang-dep",
+                            "init"
+                        ]
+                    }
+                }
+            ]
+        },
+        "clean": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "rm",
+                            "${DIR}/src/voter"
+                        ]
+                    }
+                }
+            ]
+        },
+        "stop": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "kubectl",
+                            "delete",
+                            "deployments,services,pods,pv,pvc,cronjob,job",
+                            "--all"
+                        ]
+                    }
+                }
+            ]
         }
-    ]
+    }
 }
-
