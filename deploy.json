@@ -43,6 +43,7 @@
                 }
             ]
         },
+
         "_pack": {
             "Requires": [],
             "Steps": [
@@ -62,6 +63,7 @@
                 }
             ]
         },
+
         "_upload": {
             "Requires": [],
             "Steps": [
@@ -77,10 +79,12 @@
                 }
             ]
         },
+
         "build": {
             "Requires": ["_build", "_pack", "_upload"],
             "Steps": []
         },
+
         "deploy": {
             "Requires": ["build"],
             "Steps": [
@@ -122,6 +126,7 @@
                 }
             ]
         },
+
         "ensure": {
             "Requires": [],
             "Steps": [
@@ -139,6 +144,7 @@
                 }
             ]
         },
+
         "export": {
             "Requires": [],
             "Steps": [
@@ -161,6 +167,7 @@
                 }
             ]
         },
+
         "setup": {
             "Requires": [],
             "Steps": [
@@ -182,6 +189,7 @@
                 }
             ]
         },
+
         "init": {
             "Requires": [],
             "Steps": [
@@ -203,6 +211,7 @@
                 }
             ]
         },
+
         "clean": {
             "Requires": [],
             "Steps": [
@@ -217,6 +226,7 @@
                 }
             ]
         },
+
         "stop": {
             "Requires": [],
             "Steps": [
