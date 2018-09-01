@@ -89,21 +89,28 @@
             "Requires": ["build"],
             "Steps": [
                 {
-                    "Type": "DoublePipeCommand",
+                    "Type": "EnsureSecret",
                     "Args": {
-                        "Source": [
-                            "cat",
-                            "k8s/deployment.template.yaml"
-                        ],
-                        "Target1": [
-                            "sed",
-                            "-e",
-                            "s/{{BUILD_TIME}}/${DATETIME}/g"
-                        ],
-                        "Target2": [
-                            "tee",
-                            "deployment.yaml"
-                        ]
+                        "Key": "skaioskit-voter-service-mysql-password"
+                    }
+                },
+                {
+                    "Type": "EnsureSecret",
+                    "Args": {
+                        "Key": "skaioskit-voter-service-mysql-root-password"
+                    }
+                },
+                {
+                    "Type": "CopyFile",
+                    "Args": {
+                        "Source": "k8s/deployment.template.yaml",
+                        "Target": "deployment.yaml"
+                    }
+                },
+                {
+                    "Type": "RunTemplate",
+                    "Args": {
+                        "File": "deployment.yaml"
                     }
                 },
                 {
@@ -162,65 +169,6 @@
                             "localhost:5000/skaioskit/voter-service",
                             "/voter",
                             "export"
-                        ]
-                    }
-                }
-            ]
-        },
-
-        "setup": {
-            "Requires": [],
-            "Steps": [
-                {
-                    "Type": "RunCommand",
-                    "Args": {
-                        "Command": [
-                            "docker",
-                            "run",
-                            "-d",
-                            "-p",
-                            "5000:5000",
-                            "--restart=always",
-                            "--name",
-                            "registry",
-                            "registry:2"
-                        ]
-                    }
-                }
-            ]
-        },
-
-        "init": {
-            "Requires": [],
-            "Steps": [
-                {
-                    "Type": "RunCommand",
-                    "Args": {
-                        "Command": [
-                            "docker",
-                            "run",
-                            "--rm",
-                            "-v",
-                            "${DIR}/src:/go/src/skaioskit",
-                            "-w",
-                            "/go/src/skaioskit",
-                            "lushdigital/docker-golang-dep",
-                            "init"
-                        ]
-                    }
-                }
-            ]
-        },
-
-        "clean": {
-            "Requires": [],
-            "Steps": [
-                {
-                    "Type": "RunCommand",
-                    "Args": {
-                        "Command": [
-                            "rm",
-                            "${DIR}/src/voter"
                         ]
                     }
                 }

@@ -16,11 +16,14 @@
 package commands
 
 import (
+    "os"
     "github.com/spf13/cobra"
-    "github.com/spf13/viper"
     "github.com/jinzhu/gorm"
     _ "github.com/jinzhu/gorm/dialects/mysql"
 
+    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+
+    "skaioskit/core"
     "skaioskit/services"
     "skaioskit/providers"
 )
@@ -32,7 +35,8 @@ var ensureCmd = &cobra.Command{
     Long:  `ensures the database schema exists and has imported the voter data.`,
     Run: func(cmd *cobra.Command, args []string) {
         //setup db connection
-        db, err := gorm.Open("mysql", viper.GetString("mysql-connection-str"))
+        conStr := skaioskit.BuildMySqlConnectionString(core.DATABASE_USER, os.Getenv("MYSQL_PASSWORD"), core.DATABASE_HOST, core.DATABASE_NAME)
+        db, err := gorm.Open("mysql", conStr)
         if err != nil {
             panic(err)
         }

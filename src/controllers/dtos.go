@@ -22,6 +22,7 @@ import (
 //TODO: These should probably be defined in the same go file as the controllers than use them.
 
 type GetAboutResponse struct {
+    Name string
     CoreVersion string
     Version string
     BuildTime string
