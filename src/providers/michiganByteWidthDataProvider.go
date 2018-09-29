@@ -27,29 +27,33 @@ import (
     "skaioskit/models"
 )
 
-type MichiganByteWidthDataProvider struct {
+type MichiganByteWidthDataProvider struct {  // should implement iVoterDataProvider
 }
 func NewMichiganByteWidthDataProvider() *MichiganByteWidthDataProvider {
-    return &MichiganByteWidthDataProvider{}
+    return &MichiganByteWidthDataProvider{}  // TODO: pass in pointer to data files.
 }
 func (p *MichiganByteWidthDataProvider) ParseCounties() <-chan models.County {
     chnl := make(chan models.County)
+
     go func() {
+        // open file
         file, err := os.Open("/data/countycd.lst")
         if err != nil {
             panic(err)
         }
+        // ensure we close it when we exit this scope
         defer file.Close()
 
         scanner := bufio.NewScanner(file)
         for scanner.Scan() {
             line := scanner.Text()
-            code, err := strconv.ParseUint(strings.TrimLeft(line[0:2], "0"), 0, 32)
+
+            code, err := strconv.ParseUint(strings.TrimLeft(line[0:2], "0"), 0, 32)  // county code is first 2 bytes uint32
             if err != nil {
                 panic(err)
             }
 
-            chnl <- models.County{Code: uint(code), Name: strings.Trim(line[2:], " ")}
+            chnl <- models.County{Code: uint(code), Name: strings.Trim(line[2:], " ")}  // everything after two bytes is the name.
         }
 
         if err := scanner.Err(); err != nil {
@@ -58,27 +62,31 @@ func (p *MichiganByteWidthDataProvider) ParseCounties() <-chan models.County {
 
         close(chnl)
     }()
+
     return chnl
 }
 func (p *MichiganByteWidthDataProvider) ParseJurisdictions() <-chan models.Jurisdiction {
     chnl := make(chan models.Jurisdiction)
+
     go func() {
         file, err := os.Open("/data/jurisdcd.lst")
         if err != nil {
             panic(err)
         }
+        // defer the file close until scope exits
         defer file.Close()
 
         scanner := bufio.NewScanner(file)
         for scanner.Scan() {
             line := scanner.Text()
-            countyCode, err := strconv.ParseUint(strings.TrimLeft(line[0:2], "0"), 0, 32)
-            code, err := strconv.ParseUint(strings.TrimLeft(line[2:7], "0"), 0, 32)
+
+            countyCode, err := strconv.ParseUint(strings.TrimLeft(line[0:2], "0"), 0, 32)  // first two bytes is the county code
+            code, err := strconv.ParseUint(strings.TrimLeft(line[2:7], "0"), 0, 32)  // next five bytes are the jur code
             if err != nil {
                 panic(err)
             }
 
-            chnl <- models.Jurisdiction{Code: uint(code), CountyCode: uint(countyCode), Name: strings.Trim(line[7:], " ")}
+            chnl <- models.Jurisdiction{Code: uint(code), CountyCode: uint(countyCode), Name: strings.Trim(line[7:], " ")}  // name
         }
 
         if err := scanner.Err(); err != nil {
@@ -87,6 +95,7 @@ func (p *MichiganByteWidthDataProvider) ParseJurisdictions() <-chan models.Juris
 
         close(chnl)
     }()
+
     return chnl
 }
 func (p *MichiganByteWidthDataProvider) ParseSchools() <-chan models.SchoolDistrict {

@@ -190,6 +190,22 @@
                     }
                 }
             ]
+        },
+
+        "clean": {
+            "Requires": [],
+            "Steps": [
+                {
+                    "Type": "RunCommand",
+                    "Args": {
+                        "Command": [
+                            "rm",
+                            "-rf",
+                            "${DIR}/working/mysql"
+                        ]
+                    }
+                }
+            ]
         }
     }
 }
