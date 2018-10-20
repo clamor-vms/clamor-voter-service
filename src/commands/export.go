@@ -22,8 +22,8 @@ import (
     "github.com/spf13/cobra"
     "github.com/jinzhu/copier"
 
-    "skaioskit/models"
-    "skaioskit/providers"
+    "clamor/models"
+    "clamor/providers"
 )
 
 var exportCmd = &cobra.Command{

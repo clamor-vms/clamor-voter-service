@@ -18,16 +18,16 @@ package services
 import (
     "github.com/jinzhu/gorm"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type IVillageService interface {
     CreateVillage(models.Village) models.Village
     UpdateVillage(models.Village) models.Village
     GetVillage(uint) (models.Village, error)
-    GetVillages(skaioskit.QueryRequest) ([]models.Village, uint64, error)
+    GetVillages(clamor.QueryRequest) ([]models.Village, uint64, error)
     EnsureVillageTable()
     EnsureVillage(models.Village)
 }
@@ -51,13 +51,13 @@ func (p *VillageService) GetVillage(code uint) (models.Village, error) {
     err := p.db.Where(&models.Village{Code: code}).First(&village).Error
     return village, err
 }
-func (p *VillageService) GetVillages(query skaioskit.QueryRequest) ([]models.Village, uint64, error) {
+func (p *VillageService) GetVillages(query clamor.QueryRequest) ([]models.Village, uint64, error) {
     var count uint64
     var villages []models.Village
     village := models.Village{}
 
-    skaioskit.BuildQueryWithoutPagination(p.db, query, &models.Village{}).Count(&count)
-    err := skaioskit.BuildQuery(p.db, query, &village).Find(&villages).Error
+    clamor.BuildQueryWithoutPagination(p.db, query, &models.Village{}).Count(&count)
+    err := clamor.BuildQuery(p.db, query, &village).Find(&villages).Error
     return villages, count, err
 }
 func (p *VillageService) EnsureVillageTable() {

@@ -24,7 +24,7 @@ import (
 
     "github.com/metakeule/fmtdate"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type MichiganByteWidthDataProvider struct {  // should implement iVoterDataProvider

@@ -24,11 +24,11 @@ import (
     "github.com/jinzhu/gorm"
     _ "github.com/jinzhu/gorm/dialects/mysql"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/core"
-    "skaioskit/services"
-    "skaioskit/controllers"
+    "clamor/core"
+    "clamor/services"
+    "clamor/controllers"
 )
 
 var serveCmd = &cobra.Command{
@@ -37,7 +37,7 @@ var serveCmd = &cobra.Command{
     Long:  `runs the rest api that exposes the voter / voter history data for other microservices to consume.`,
     Run: func(cmd *cobra.Command, args []string) {
         //setup db connection
-        conStr := skaioskit.BuildMySqlConnectionString(core.DATABASE_USER, os.Getenv("MYSQL_PASSWORD"), core.DATABASE_HOST, core.DATABASE_NAME)
+        conStr := clamor.BuildMySqlConnectionString(core.DATABASE_USER, os.Getenv("MYSQL_PASSWORD"), core.DATABASE_HOST, core.DATABASE_NAME)
         db, err := gorm.Open("mysql", conStr)
         if err != nil {
             panic(err)
@@ -54,14 +54,14 @@ var serveCmd = &cobra.Command{
         voterHistoryService := services.NewVoterHistoryService(db)
 
         //build controllers
-        aboutController := skaioskit.NewControllerProcessor(controllers.NewAboutController())
-        countyController := skaioskit.NewControllerProcessor(controllers.NewCountyController(countyService))
-        electionController := skaioskit.NewControllerProcessor(controllers.NewElectionController(electionService))
-        jurisdictionController := skaioskit.NewControllerProcessor(controllers.NewJurisdictionController(jurisdictionService))
-        schoolDistrictController := skaioskit.NewControllerProcessor(controllers.NewSchoolDistrictController(schoolService))
-        villageController := skaioskit.NewControllerProcessor(controllers.NewVillageController(villageService))
-        voterController := skaioskit.NewControllerProcessor(controllers.NewVoterController(voterService))
-        voterHistoryController := skaioskit.NewControllerProcessor(controllers.NewVoterHistoryController(voterHistoryService))
+        aboutController := clamor.NewControllerProcessor(controllers.NewAboutController())
+        countyController := clamor.NewControllerProcessor(controllers.NewCountyController(countyService))
+        electionController := clamor.NewControllerProcessor(controllers.NewElectionController(electionService))
+        jurisdictionController := clamor.NewControllerProcessor(controllers.NewJurisdictionController(jurisdictionService))
+        schoolDistrictController := clamor.NewControllerProcessor(controllers.NewSchoolDistrictController(schoolService))
+        villageController := clamor.NewControllerProcessor(controllers.NewVillageController(villageService))
+        voterController := clamor.NewControllerProcessor(controllers.NewVoterController(voterService))
+        voterHistoryController := clamor.NewControllerProcessor(controllers.NewVoterHistoryController(voterHistoryService))
 
         //setup routing to controllers
         r := mux.NewRouter()
@@ -75,8 +75,8 @@ var serveCmd = &cobra.Command{
         r.HandleFunc("/voterHistory", voterHistoryController.Logic)
 
         //wrap everything behind a jwt middleware
-        jwtMiddleware := skaioskit.JWTEnforceMiddleware([]byte(os.Getenv("JWT_SECRET")))
-        http.Handle("/", skaioskit.PanicHandler(jwtMiddleware(r)))
+        jwtMiddleware := clamor.JWTEnforceMiddleware([]byte(os.Getenv("JWT_SECRET")))
+        http.Handle("/", clamor.PanicHandler(jwtMiddleware(r)))
 
         //server up app
         if err := http.ListenAndServe(":" + core.PORT_NUMBER, nil); err != nil {

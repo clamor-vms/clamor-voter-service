@@ -18,16 +18,16 @@ package services
 import (
     "github.com/jinzhu/gorm"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type IElectionService interface {
     CreateElection(models.Election) models.Election
     UpdateElection(models.Election) models.Election
     GetElection(uint64) (models.Election, error)
-    GetElections(skaioskit.QueryRequest) ([]models.Election, uint64, error)
+    GetElections(clamor.QueryRequest) ([]models.Election, uint64, error)
     EnsureElectionTable()
     EnsureElection(models.Election)
 }
@@ -51,13 +51,13 @@ func (p *ElectionService) GetElection(code uint64) (models.Election, error) {
     err := p.db.Where(&models.Election{Code: code}).First(&election).Error
     return election, err
 }
-func (p *ElectionService) GetElections(query skaioskit.QueryRequest) ([]models.Election, uint64, error) {
+func (p *ElectionService) GetElections(query clamor.QueryRequest) ([]models.Election, uint64, error) {
     var count uint64
     var elections []models.Election
     election := models.Election{}
 
-    skaioskit.BuildQueryWithoutPagination(p.db, query, &models.Election{}).Count(&count)
-    err := skaioskit.BuildQuery(p.db, query, &election).Find(&elections).Error
+    clamor.BuildQueryWithoutPagination(p.db, query, &models.Election{}).Count(&count)
+    err := clamor.BuildQuery(p.db, query, &election).Find(&elections).Error
     return elections, count, err
 }
 func (p *ElectionService) EnsureElectionTable() {

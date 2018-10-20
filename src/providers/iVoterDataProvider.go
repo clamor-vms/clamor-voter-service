@@ -16,7 +16,7 @@
 package providers
 
 import (
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type IVoterDataProvider interface {

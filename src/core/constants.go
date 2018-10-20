@@ -18,6 +18,6 @@ package core
 const SERVICE_VERSION = "0.0.7-beta"
 const PORT_NUMBER = "80"
 
-const DATABASE_USER = "skaioskit"
+const DATABASE_USER = "clamor"
 const DATABASE_HOST = "voter-service-mysql"
 const DATABASE_NAME = "voter"

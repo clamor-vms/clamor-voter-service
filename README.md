@@ -26,7 +26,7 @@ Obviously, if you're exposing the api to the realworld you'll want to setup a re
 
 Clone this repo
 
-git clone git@github.com:nathanmentley/mi_voter_database.git
+git clone git@github.com:clamor-vms/mi_voter_database.git
 
 Download a raw voter dump from this site:
 http://michiganvoters.info/download.html

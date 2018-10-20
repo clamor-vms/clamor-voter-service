@@ -19,9 +19,9 @@ import (
     "encoding/json"
     "net/http"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/services"
+    "clamor/services"
 )
 
 type ElectionController struct {
@@ -32,29 +32,29 @@ func NewElectionController(electionService services.IElectionService) *ElectionC
         electionService: electionService,
     }
 }
-func (p *ElectionController) Get(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
+func (p *ElectionController) Get(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
     queryStr := r.URL.Query().Get("query")
-    query := skaioskit.QueryRequest{}
+    query := clamor.QueryRequest{}
     err := json.Unmarshal([]byte(queryStr), &query)
 
     if err != nil {
-        return skaioskit.ControllerResponse{Status: http.StatusBadRequest, Body: skaioskit.EmptyResponse{}}
+        return clamor.ControllerResponse{Status: http.StatusBadRequest, Body: clamor.EmptyResponse{}}
     }
 
     elections, count, err := p.electionService.GetElections(query)
 
     if err == nil {
-        return skaioskit.ControllerResponse{Status: http.StatusOK, Body: GetElectionsResponse{Elections: elections, Total: count}}
+        return clamor.ControllerResponse{Status: http.StatusOK, Body: GetElectionsResponse{Elections: elections, Total: count}}
     } else {
         panic(err)
     }
 }
-func (p *ElectionController) Post(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
-    return skaioskit.ControllerResponse{Status: http.StatusNotFound, Body: skaioskit.EmptyResponse{}}
+func (p *ElectionController) Post(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
+    return clamor.ControllerResponse{Status: http.StatusNotFound, Body: clamor.EmptyResponse{}}
 }
-func (p *ElectionController) Put(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
-    return skaioskit.ControllerResponse{Status: http.StatusNotFound, Body: skaioskit.EmptyResponse{}}
+func (p *ElectionController) Put(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
+    return clamor.ControllerResponse{Status: http.StatusNotFound, Body: clamor.EmptyResponse{}}
 }
-func (p *ElectionController) Delete(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
-    return skaioskit.ControllerResponse{Status: http.StatusNotFound, Body: skaioskit.EmptyResponse{}}
+func (p *ElectionController) Delete(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
+    return clamor.ControllerResponse{Status: http.StatusNotFound, Body: clamor.EmptyResponse{}}
 }

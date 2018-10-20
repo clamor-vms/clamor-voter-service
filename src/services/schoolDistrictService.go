@@ -18,16 +18,16 @@ package services
 import (
     "github.com/jinzhu/gorm"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type ISchoolDistrictService interface {
     CreateSchoolDistrict(models.SchoolDistrict) models.SchoolDistrict
     UpdateSchoolDistrict(models.SchoolDistrict) models.SchoolDistrict
     GetSchoolDistrict(uint) (models.SchoolDistrict, error)
-    GetSchoolDistricts(skaioskit.QueryRequest) ([]models.SchoolDistrict, uint64, error)
+    GetSchoolDistricts(clamor.QueryRequest) ([]models.SchoolDistrict, uint64, error)
     EnsureSchoolDistrictTable()
     EnsureSchoolDistrict(models.SchoolDistrict)
 }
@@ -51,13 +51,13 @@ func (p *SchoolDistrictService) GetSchoolDistrict(code uint) (models.SchoolDistr
     err := p.db.Where(&models.SchoolDistrict{Code: code}).First(&school).Error
     return school, err
 }
-func (p *SchoolDistrictService) GetSchoolDistricts(query skaioskit.QueryRequest) ([]models.SchoolDistrict, uint64, error) {
+func (p *SchoolDistrictService) GetSchoolDistricts(query clamor.QueryRequest) ([]models.SchoolDistrict, uint64, error) {
     var count uint64
     var schoolDistricts []models.SchoolDistrict
     schoolDistrict := models.SchoolDistrict{}
 
-    skaioskit.BuildQueryWithoutPagination(p.db, query, &models.SchoolDistrict{}).Count(&count)
-    err := skaioskit.BuildQuery(p.db, query, &schoolDistrict).Find(&schoolDistricts).Error
+    clamor.BuildQueryWithoutPagination(p.db, query, &models.SchoolDistrict{}).Count(&count)
+    err := clamor.BuildQuery(p.db, query, &schoolDistrict).Find(&schoolDistricts).Error
     return schoolDistricts, count, err
 }
 func (p *SchoolDistrictService) EnsureSchoolDistrictTable() {

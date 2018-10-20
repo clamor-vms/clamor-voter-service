@@ -21,11 +21,11 @@ import (
     "github.com/jinzhu/gorm"
     _ "github.com/jinzhu/gorm/dialects/mysql"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/core"
-    "skaioskit/services"
-    "skaioskit/providers"
+    "clamor/core"
+    "clamor/services"
+    "clamor/providers"
 )
 
 //The ensure command will load data from an IVoterDataProvider and ensure each record exists and is updated in the database.
@@ -35,7 +35,7 @@ var ensureCmd = &cobra.Command{
     Long:  `ensures the database schema exists and has imported the voter data.`,
     Run: func(cmd *cobra.Command, args []string) {
         //setup db connection
-        conStr := skaioskit.BuildMySqlConnectionString(core.DATABASE_USER, os.Getenv("MYSQL_PASSWORD"), core.DATABASE_HOST, core.DATABASE_NAME)
+        conStr := clamor.BuildMySqlConnectionString(core.DATABASE_USER, os.Getenv("MYSQL_PASSWORD"), core.DATABASE_HOST, core.DATABASE_NAME)
         db, err := gorm.Open("mysql", conStr)
         if err != nil {
             panic(err)

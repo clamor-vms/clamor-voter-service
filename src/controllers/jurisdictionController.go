@@ -19,9 +19,9 @@ import (
     "encoding/json"
     "net/http"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/services"
+    "clamor/services"
 )
 
 type JurisdictionController struct {
@@ -32,29 +32,29 @@ func NewJurisdictionController(jurisdictionService services.IJurisdictionService
         jurisdictionService: jurisdictionService,
     }
 }
-func (p *JurisdictionController) Get(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
+func (p *JurisdictionController) Get(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
     queryStr := r.URL.Query().Get("query")
-    query := skaioskit.QueryRequest{}
+    query := clamor.QueryRequest{}
     err := json.Unmarshal([]byte(queryStr), &query)
 
     if err != nil {
-        return skaioskit.ControllerResponse{Status: http.StatusBadRequest, Body: skaioskit.EmptyResponse{}}
+        return clamor.ControllerResponse{Status: http.StatusBadRequest, Body: clamor.EmptyResponse{}}
     }
 
     jurisdictions, count, err := p.jurisdictionService.GetJurisdictions(query)
 
     if err == nil {
-        return skaioskit.ControllerResponse{Status: http.StatusOK, Body: GetJurisdictionsResponse{Jurisdictions: jurisdictions, Total: count}}
+        return clamor.ControllerResponse{Status: http.StatusOK, Body: GetJurisdictionsResponse{Jurisdictions: jurisdictions, Total: count}}
     } else {
         panic(err)
     }
 }
-func (p *JurisdictionController) Post(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
-    return skaioskit.ControllerResponse{Status: http.StatusNotFound, Body: skaioskit.EmptyResponse{}}
+func (p *JurisdictionController) Post(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
+    return clamor.ControllerResponse{Status: http.StatusNotFound, Body: clamor.EmptyResponse{}}
 }
-func (p *JurisdictionController) Put(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
-    return skaioskit.ControllerResponse{Status: http.StatusNotFound, Body: skaioskit.EmptyResponse{}}
+func (p *JurisdictionController) Put(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
+    return clamor.ControllerResponse{Status: http.StatusNotFound, Body: clamor.EmptyResponse{}}
 }
-func (p *JurisdictionController) Delete(w http.ResponseWriter, r *http.Request) skaioskit.ControllerResponse {
-    return skaioskit.ControllerResponse{Status: http.StatusNotFound, Body: skaioskit.EmptyResponse{}}
+func (p *JurisdictionController) Delete(w http.ResponseWriter, r *http.Request) clamor.ControllerResponse {
+    return clamor.ControllerResponse{Status: http.StatusNotFound, Body: clamor.EmptyResponse{}}
 }

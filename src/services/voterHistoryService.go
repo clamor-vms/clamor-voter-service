@@ -18,16 +18,16 @@ package services
 import (
     "github.com/jinzhu/gorm"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type IVoterHistoryService interface {
     CreateVoterHistory(models.VoterHistory) models.VoterHistory
     UpdateVoterHistory(models.VoterHistory) models.VoterHistory
     GetVoterHistory(uint64) (models.VoterHistory, error)
-    GetVoterHistories(skaioskit.QueryRequest) ([]models.VoterHistory, uint64, error)
+    GetVoterHistories(clamor.QueryRequest) ([]models.VoterHistory, uint64, error)
     GetVoterHistoryCount() uint64
     EnsureVoterHistoryTable()
     EnsureVoterHistory(models.VoterHistory)
@@ -52,13 +52,13 @@ func (p *VoterHistoryService) GetVoterHistory(electionCode uint64) (models.Voter
     err := p.db.Where(&models.VoterHistory{ElectionCode: electionCode}).First(&history).Error
     return history, err
 }
-func (p *VoterHistoryService) GetVoterHistories(query skaioskit.QueryRequest) ([]models.VoterHistory, uint64, error) {
+func (p *VoterHistoryService) GetVoterHistories(query clamor.QueryRequest) ([]models.VoterHistory, uint64, error) {
     var count uint64
     var voterHistories []models.VoterHistory
     voterHistory := models.VoterHistory{}
 
-    skaioskit.BuildQueryWithoutPagination(p.db, query, &models.VoterHistory{}).Count(&count)
-    err := skaioskit.BuildQuery(p.db, query, &voterHistory).Find(&voterHistories).Error
+    clamor.BuildQueryWithoutPagination(p.db, query, &models.VoterHistory{}).Count(&count)
+    err := clamor.BuildQuery(p.db, query, &voterHistory).Find(&voterHistories).Error
     return voterHistories, count, err
 }
 func (p *VoterHistoryService) GetVoterHistoryCount() uint64 {

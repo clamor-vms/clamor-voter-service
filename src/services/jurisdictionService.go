@@ -18,16 +18,16 @@ package services
 import (
     "github.com/jinzhu/gorm"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type IJurisdictionService interface {
     CreateJurisdiction(models.Jurisdiction) models.Jurisdiction
     UpdateJurisdiction(models.Jurisdiction) models.Jurisdiction
     GetJurisdiction(uint) (models.Jurisdiction, error)
-    GetJurisdictions(skaioskit.QueryRequest) ([]models.Jurisdiction, uint64, error)
+    GetJurisdictions(clamor.QueryRequest) ([]models.Jurisdiction, uint64, error)
     EnsureJurisdictionTable()
     EnsureJurisdiction(models.Jurisdiction)
 }
@@ -51,13 +51,13 @@ func (p *JurisdictionService) GetJurisdiction(code uint) (models.Jurisdiction, e
     err := p.db.Where(&models.Jurisdiction{Code: code}).First(&jurisdiction).Error
     return jurisdiction, err
 }
-func (p *JurisdictionService) GetJurisdictions(query skaioskit.QueryRequest) ([]models.Jurisdiction, uint64, error) {
+func (p *JurisdictionService) GetJurisdictions(query clamor.QueryRequest) ([]models.Jurisdiction, uint64, error) {
     var count uint64
     var jurisdictions []models.Jurisdiction
     jurisdiction := models.Jurisdiction{}
 
-    skaioskit.BuildQueryWithoutPagination(p.db, query, &models.Jurisdiction{}).Count(&count)
-    err := skaioskit.BuildQuery(p.db, query, &jurisdiction).Find(&jurisdictions).Error
+    clamor.BuildQueryWithoutPagination(p.db, query, &models.Jurisdiction{}).Count(&count)
+    err := clamor.BuildQuery(p.db, query, &jurisdiction).Find(&jurisdictions).Error
     return jurisdictions, count, err
 }
 func (p *JurisdictionService) EnsureJurisdictionTable() {

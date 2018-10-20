@@ -16,7 +16,7 @@
 package controllers
 
 import (
-    "skaioskit/models"
+    "clamor/models"
 )
 
 //TODO: These should probably be defined in the same go file as the controllers than use them.

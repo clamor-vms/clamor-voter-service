@@ -18,15 +18,15 @@ package services
 import (
     "github.com/jinzhu/gorm"
 
-    skaioskit "github.com/nathanmentley/skaioskit-go-core"
+    clamor "github.com/clamor-vms/clamor-go-core"
 
-    "skaioskit/models"
+    "clamor/models"
 )
 
 type IVoterService interface {
     CreateVoter(models.Voter) models.Voter
     UpdateVoter(models.Voter) models.Voter
-    GetVoters(skaioskit.QueryRequest) ([]models.Voter, uint64, error)
+    GetVoters(clamor.QueryRequest) ([]models.Voter, uint64, error)
     GetVoter(uint64) (models.Voter, error)
     GetVoterCount() uint64
     EnsureVoterTable()
@@ -47,13 +47,13 @@ func (p *VoterService) UpdateVoter(voter models.Voter) models.Voter {
     p.db.Save(&voter)
     return voter
 }
-func (p *VoterService) GetVoters(query skaioskit.QueryRequest) ([]models.Voter, uint64, error) {
+func (p *VoterService) GetVoters(query clamor.QueryRequest) ([]models.Voter, uint64, error) {
     var count uint64
     var voters []models.Voter
     voter := models.Voter{}
 
-    skaioskit.BuildQueryWithoutPagination(p.db, query, &models.Voter{}).Count(&count)
-    err := skaioskit.BuildQuery(p.db, query, &voter).Find(&voters).Error
+    clamor.BuildQueryWithoutPagination(p.db, query, &models.Voter{}).Count(&count)
+    err := clamor.BuildQuery(p.db, query, &voter).Find(&voters).Error
     return voters, count, err
 }
 func (p *VoterService) GetVoter(voterId uint64) (models.Voter, error) {
