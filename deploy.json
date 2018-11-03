@@ -56,7 +56,7 @@
                             "-f",
                             "./Dockerfile",
                             "-t",
-                            "localhost:5000/clamor/voter-service",
+                            "${DOCKER_REG}/clamor/voter-service",
                             "."
                         ]
                     }
@@ -73,7 +73,7 @@
                         "Command": [
                             "docker",
                             "push",
-                            "localhost:5000/clamor/voter-service"
+                            "${DOCKER_REG}/clamor/voter-service"
                         ]
                     }
                 }
@@ -166,7 +166,7 @@
                             "${DIR}/data:/data",
                             "-v",
                             "${DIR}/working:/working",
-                            "localhost:5000/clamor/voter-service",
+                            "${DOCKER_REG}/clamor/voter-service",
                             "/voter",
                             "export"
                         ]

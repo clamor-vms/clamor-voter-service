@@ -72,7 +72,7 @@ spec:
     spec:
       containers:
       - name: voter-service
-        image: localhost:5000/clamor/voter-service:latest
+        image: ${DOCKER_REG}/clamor/voter-service:latest
         imagePullPolicy: Always
         command: 
         - /voter
@@ -112,7 +112,7 @@ spec:
         spec:
           containers:
           - name: voter-service-ensure
-            image: localhost:5000/clamor/voter-service:latest
+            image: ${DOCKER_REG}/clamor/voter-service:latest
             imagePullPolicy: Always
             command: 
             - /voter
