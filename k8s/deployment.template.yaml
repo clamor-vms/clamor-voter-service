@@ -1,3 +1,36 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: voter-mysql-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: voter-log-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: voter-data-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
 apiVersion: apps/v1beta2 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
@@ -43,8 +76,8 @@ spec:
           mountPath: /var/lib/mysql
       volumes:
       - name: mysql-persistent-storage
-        hostPath:
-          path: "${DIR}/working/mysql"
+        persistentVolumeClaim:
+          claimName: voter-mysql-volume-claim
 ---
 kind: Service
 apiVersion: v1
@@ -97,8 +130,8 @@ spec:
           mountPath: /logs
       volumes:
       - name: log-storage
-        hostPath:
-          path: "${DIR}/working/logs"
+        persistentVolumeClaim:
+          claimName: voter-log-volume-claim
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
@@ -135,8 +168,8 @@ spec:
               mountPath: /data
           volumes:
           - name: voter-data-dir
-            hostPath:
-              path: "${DIR}/data"
+            persistentVolumeClaim:
+              claimName: voter-data-volume-claim
           restartPolicy: OnFailure
 ---
 kind: Service
