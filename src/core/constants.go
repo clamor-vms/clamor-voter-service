@@ -15,9 +15,13 @@
 
 package core
 
+import (
+    "os"
+)
+
 const SERVICE_VERSION = "0.0.7-beta"
 const PORT_NUMBER = "80"
 
 const DATABASE_USER = "clamor"
-const DATABASE_HOST = "voter-service-mysql"
+var DATABASE_HOST = os.Getenv("MYSQL_HOST")
 const DATABASE_NAME = "voter"
